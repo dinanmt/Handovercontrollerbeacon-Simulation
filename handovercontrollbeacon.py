@@ -7,6 +7,8 @@ from mn_wifi.net import Mininet_wifi
 from mn_wifi.wmediumdConnector import interference
 
 
+#hcb-4ap-dinanmt
+
 def topology():
     "Create a network."
     net = Mininet_wifi(controller=RemoteController, accessPoint=UserAP,
@@ -25,6 +27,9 @@ def topology():
     ap3 = net.addAccessPoint('ap3', mac='00:00:00:00:00:03', ssid="handover",
                              mode="g", channel="1", passwd='123456789a',
                              encrypt='wpa2', position='120,100,0')
+    ap4 = net.addAccessPoint('ap4', mac='00:00:00:00:00:04', ssid="handover",
+                             mode="g", channel="11", passwd='123456789a',
+                             encrypt='wpa2', position='160,130,0')                                                   
     s4 = net.addSwitch('s4')
     h1 = net.addHost('h1')
     controller_ = net.addHost('con', ip='10.0.0.100/8', inNamespace=False)
@@ -36,13 +41,14 @@ def topology():
     info("*** Configuring wifi nodes\n")
     net.configureWifiNodes()
 
-    net.plotGraph(max_x=300, max_y=300)
+    net.plotGraph(max_x=350, max_y=350)
 
     info("*** Creating links\n")
     net.addLink(h1, ap1)
     net.addLink(s4, ap1)
     net.addLink(s4, ap2)
     net.addLink(s4, ap3)
+    net.addLink(s4, ap4)
     net.addLink(s4, controller_)
 
     info("*** Starting network\n")
@@ -52,6 +58,7 @@ def topology():
     ap1.start([c1])
     ap2.start([c1])
     ap3.start([c1])
+    ap4.start([c1])
     s4.start([c1])
 
     sta1.cmd('iw dev sta1-wlan0 interface add mon0 type monitor')
